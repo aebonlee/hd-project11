@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HDPS 글로벌 KPI 자동화 포털</title>
+<meta name="description" content="글로벌 6개 사업장의 HDPS 성과지표를 엑셀 업로드로 자동 집계하고, 달성·미달성을 판정해 미달성 지표의 사유·만회대책 요청 메일까지 자동 작성하는 웹 포털">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header class="topbar">
+  <div class="inner topbar-inner">
+    <div class="brand">
+      <span class="brand-mark">HDPS</span>
+      <span class="brand-text">글로벌 KPI 자동화 포털</span>
+    </div>
+    <div class="topbar-controls">
+      <label class="ctl">
+        <span>사업장</span>
+        <select id="siteSelect"></select>
+      </label>
+      <label class="ctl">
+        <span>기준월</span>
+        <select id="monthSelect"></select>
+      </label>
+      <button type="button" class="btn ghost" id="btnReset">데모 초기화</button>
+    </div>
+  </div>
+</header>
+
+<div class="demo-banner">
+  <div class="inner">
+    <strong>데모 데이터입니다.</strong>
+    화면의 사업장·지표명은 HDPS 표준 모듈 체계를 따르지만 <b>목표·실적 수치는 전부 임의로 만든 값</b>입니다.
+    실제 사내 KPI 파일은 이 저장소에 들어 있지 않습니다.
+  </div>
+</div>
+
+<nav class="tabs">
+  <div class="inner tabs-inner" id="tabs">
+    <button type="button" class="tab active" data-tab="dashboard">대시보드</button>
+    <button type="button" class="tab" data-tab="import">① 데이터 자동입력</button>
+    <button type="button" class="tab" data-tab="check">② 달성 판정</button>
+    <button type="button" class="tab" data-tab="mail">③ 미달성 메일링</button>
+    <button type="button" class="tab" data-tab="mapping">매핑표</button>
+    <button type="button" class="tab" data-tab="contacts">담당자</button>
+    <button type="button" class="tab" data-tab="logs">실행로그</button>
+  </div>
+</nav>
+
+<main class="inner main">
+
+  <!-- ================= 대시보드 ================= -->
+  <section class="panel" id="tab-dashboard">
+    <h2>글로벌 사업장 종합 <span class="sub" id="dashMonth"></span></h2>
+
+    <div class="cards" id="overviewCards"></div>
+
+    <div class="grid2">
+      <div class="card block">
+        <h3>모듈별 달성 현황 <span class="sub" id="moduleSite"></span></h3>
+        <div class="tablewrap"><table class="tbl" id="moduleTable"></table></div>
+      </div>
+      <div class="card block">
+        <h3>월별 달성률 추이 <span class="sub" id="trendSite"></span></h3>
+        <div id="trendChart" class="trend"></div>
+        <p class="note">달성률 = 달성 ÷ (달성 + 미달성). 자료가 아직 안 들어온 지표는 분모에서 뺍니다.</p>
+      </div>
+    </div>
+
+    <div class="card block">
+      <h3>미달성 상위 지표 <span class="sub">목표에서 많이 벗어난 순</span></h3>
+      <div class="tablewrap"><table class="tbl" id="topUnderTable"></table></div>
+    </div>
+  </section>
+
+  <!-- ================= 임포트 ================= -->
+  <section class="panel hidden" id="tab-import">
+    <h2>① 데이터 자동입력 <span class="sub">매크로의 ImportOverseasData 를 대신합니다</span></h2>
+
+    <div class="card block">
+      <h3>원본 KPI 파일 올리기</h3>
+      <p class="note">
+        엑셀(.xlsx/.xlsm)을 올리면 <b>KPI 이름이 가장 많이 맞는 열</b>을 찾아 매핑표와 대조합니다.
+        매크로처럼 행 번호를 박아 두지 않으므로, 원본 서식에서 행이 밀려도 그대로 읽힙니다.
+      </p>
+      <div class="row">
+        <input type="file" id="importFile" accept=".xlsx,.xlsm,.xls">
+        <button type="button" class="btn ghost" id="btnTemplate">표준 양식 내려받기</button>
+      </div>
+      <div id="importSetup" class="hidden">
+        <div class="row">
+          <label class="ctl"><span>시트</span><select id="sheetSelect"></select></label>
+          <label class="ctl"><span>KPI 이름 열</span><select id="nameColSelect"></select></label>
+          <label class="ctl"><span>실적 값 열</span><select id="valueColSelect"></select></label>
+          <button type="button" class="btn primary" id="btnRunImport">전사 실행</button>
+        </div>
+        <p class="note" id="detectNote"></p>
+      </div>
+    </div>
+
+    <div class="card block hidden" id="importResult">
+      <h3>전사 결과</h3>
+      <div class="cards" id="importStats"></div>
+      <div class="grid2">
+        <div>
+          <h4>건너뛴 값 <span class="sub">제외 지표 · 숫자 아님 · 빈값</span></h4>
+          <div class="tablewrap short"><table class="tbl" id="skippedTable"></table></div>
+        </div>
+        <div>
+          <h4>매핑표에 없는 이름</h4>
+          <div class="tablewrap short"><table class="tbl" id="unmatchedTable"></table></div>
+        </div>
+      </div>
+      <div class="row">
+        <button type="button" class="btn primary" id="btnCommitImport">이 결과를 실적에 반영</button>
+        <span class="note" id="commitNote"></span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= 판정 ================= -->
+  <section class="panel hidden" id="tab-check">
+    <h2>② 달성 판정 <span class="sub">매크로의 CheckAchievement 를 대신합니다</span></h2>
+
+    <div class="card block">
+      <div class="row">
+        <label class="ctl"><span>모듈</span><select id="checkModule"></select></label>
+        <label class="ctl"><span>상태</span>
+          <select id="checkStatus">
+            <option value="">전체</option>
+            <option value="미달성">미달성만</option>
+            <option value="달성">달성만</option>
+            <option value="판정불가">판정불가만</option>
+          </select>
+        </label>
+        <button type="button" class="btn ghost" id="btnExportCheck">판정 결과 엑셀</button>
+      </div>
+      <div class="cards" id="checkStats"></div>
+      <div class="tablewrap"><table class="tbl" id="checkTable"></table></div>
+    </div>
+  </section>
+
+  <!-- ================= 메일 ================= -->
+  <section class="panel hidden" id="tab-mail">
+    <h2>③ 미달성 메일링 <span class="sub">매크로의 SendUnderperformanceEmails 를 대신합니다</span></h2>
+
+    <div class="card block">
+      <p class="note">
+        미달성 지표를 <b>담당팀(R&amp;R)별로 묶어</b> 사유·만회대책 요청 메일 초안을 만듭니다.
+        담당자 탭에 이메일이 채워진 팀만 발송 준비 완료로 표시됩니다.
+      </p>
+      <div class="row">
+        <label class="ctl"><span>보내는 사람 표기</span><input type="text" id="senderName" placeholder="HDPS 사무국"></label>
+        <button type="button" class="btn ghost" id="btnExportMail">초안 전체 엑셀로</button>
+      </div>
+      <div id="mailList"></div>
+    </div>
+  </section>
+
+  <!-- ================= 매핑표 ================= -->
+  <section class="panel hidden" id="tab-mapping">
+    <h2>매핑표 <span class="sub">원본 영문 지표명 ↔ 총괄 국문 지표명</span></h2>
+    <div class="card block">
+      <p class="note">
+        <b>환산배율</b>은 원본이 0.96(소수)인데 총괄은 96(정수)으로 적는 관례를 맞추는 값입니다.
+        <b>값형식</b>이 <code>시간serial</code>이면 <code>00:48:00</code> 같은 표기를 시간 단위 숫자로,
+        <code>퍼센트텍스트</code>면 <code>+8%</code> 같은 텍스트를 숫자로 바꿉니다.
+      </p>
+      <div class="row">
+        <input type="search" id="mappingSearch" placeholder="지표명 검색">
+        <span class="note" id="mappingCount"></span>
+      </div>
+      <div class="tablewrap"><table class="tbl" id="mappingTable"></table></div>
+    </div>
+  </section>
+
+  <!-- ================= 담당자 ================= -->
+  <section class="panel hidden" id="tab-contacts">
+    <h2>담당자 <span class="sub">팀별 수신자 — 미달성 메일이 여기로 갑니다</span></h2>
+    <div class="card block">
+      <div class="tablewrap"><table class="tbl" id="contactTable"></table></div>
+      <p class="note">입력하면 바로 저장됩니다. 이메일이 빈 팀은 메일 탭에서 <b>발송 대기</b>로 표시됩니다.</p>
+    </div>
+  </section>
+
+  <!-- ================= 로그 ================= -->
+  <section class="panel hidden" id="tab-logs">
+    <h2>실행로그</h2>
+    <div class="card block">
+      <div class="tablewrap"><table class="tbl" id="logTable"></table></div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="foot">
+  <div class="inner">
+    <p>HDPS 글로벌 KPI 자동화 포털 · 기획 서지철 (HD건설기계) · 생성형 AI 업무자동화 전문가과정 1차수</p>
+    <p class="small">문의 dreamitbiz@naver.com · 010-2612-4256 · 카카오톡 aebon</p>
+  </div>
+</footer>
+
+<script src="lib/xlsx.full.min.js"></script>
+<script src="js/seed-data.js"></script>
+<script src="js/logic.js"></script>
+<script src="js/store.js"></script>
+<script src="js/importer.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>

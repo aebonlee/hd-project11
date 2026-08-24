@@ -1,0 +1,962 @@
+[
+ {
+  "module": "Goal-oriented Team operation",
+  "ko": "SQDC 목표달성팀 수(또는 비율)",
+  "en": "Line wise SQDCEI KPIs Achievement Rate",
+  "dir": "상향(높을수록 좋음)",
+  "scale": 100,
+  "fmt": "숫자"
+ },
+ {
+  "module": "Goal-oriented Team operation",
+  "ko": "\"Cost\" KPI 달성율",
+  "en": "\"Cost\" KPI Achievement Rate",
+  "dir": "상향(높을수록 좋음)",
+  "scale": 100,
+  "fmt": "숫자"
+ },
+ {
+  "module": "Issue Escalation",
+  "ko": "대당 비가동 MH",
+  "en": "Man-hours Loss per machine",
+  "dir": "하향(낮을수록 좋음)",
+  "scale": 1,
+  "fmt": "숫자"
+ },
+ {
+  "module": "Issue Escalation",
+  "ko": "생산이슈 재발율",
+  "en": "Issue Recurrence Rate",
+  "dir": "하향(낮을수록 좋음)",
+  "scale": 100,
+  "fmt": "숫자"
+ },
+ {
+  "module": "Issue Escalation",
+  "ko": "생산지시 준수율(완제품 입고계획 준수율)",
+  "en": "Production Instruction Compliance Rate (against FDI out plan)",
+  "dir": "상향(높을수록 좋음)",
+  "scale": 100,
+  "fmt": "숫자"
+ },
+ {
+  "module": "Issue Escalation",
+  "ko": "대당 펜딩이슈 조치 리드타임",
+  "en": "Pending Action Lead Time (Issues closure time/machine)",
+  "dir": "하향(낮을수록 좋음)",
+  "scale": 1,
+  "fmt": "숫자"
+ },
+ {
+  "module": "Cross Functional Work",
+  "ko": "공정 순환율",
+  "en": "Job Rotation Rate",
+  "dir": "상향(높을수록 좋음)",
+  "scale": 100,
+  "fmt": "숫자"
+ },
+ {
+  "module": "Cross Functional Work",
+  "ko": "개인별 3공정 달성율",
+  "en": "3 process achievement rate per person",
+  "dir": "상향(높을수록 좋음)",
+  "scale": 100,
+  "fmt": "숫자"
+ },
+ {
+  "module": "Cross Functional Work",
+  "ko": "공정별 3인 달성율",
+  "en": "3 people achievement rate per process",
+  "dir": "상향(높을수록 좋음)",
+  "scale": 100,
+  "fmt": "숫자"
+ },
+ {
+  "module": "Quality planning",
+  "ko": "IQ(초기품질)",
+  "en": "IQ 200 (Initial Quality)",
+  "dir": "하향(낮을수록 좋음)",
+  "scale": 1,
+  "fmt": "숫자"
+ },
+ {
+  "module": "Quality planning",
+  "ko": "WQ(내구품질)",
+  "en": "W.Q. (Warranty Quality)",
+  "dir": "하향(낮을수록 좋음)",
+  "scale": 1,
+  "fmt": "숫자"
+ },
+ {
+  "module": "Quality planning",
+  "ko": "라인 품질(전체)비가동손실MH",
+  "en": "Quality (MH Loss ) Line Downtime",
+  "dir": "하향(낮을수록 좋음)",
+  "scale": 1,
+  "fmt": "숫자"
+ },
+ {
+  "module": "Quality planning",
+  "ko": "QIR 개선율",
+  "en": "QIR (PPR) Improvement Completion Rate (R210E)",
+  "dir": "상향(높을수록 좋음)",
+  "scale": 100,
+  "fmt": "숫자"
+ },
+ {
+  "module": "Quality assurance",
+  "ko": "부품 공정불량율(또는 라인품질비가동(부품))",
+  "en": "PPM",
+  "dir": "하향(낮을수록 좋음)",
+  "scale": 1,
+  "fmt": "숫자"
+ },
+ {
+  "module": "Quality assurance",
+  "ko": "완제품 시운전 불량율",
+  "en": "Performance Test Defect Rate",
+  "dir": "하향(낮을수록 좋음)",
+  "scale": 1,
+  "fmt": "숫자"
+ },
+ {
+  "module": "Quality assurance",
+  "ko": "라인품질비가동(부품)손실",
+  "en": "Quality Line Downtime - Supplier/Part Attribution",
+  "dir": "하향(낮을수록 좋음)",
+  "scale": 1,
+  "fmt": "숫자"
+ },
+ {
+  "module": "Quality assurance",
+  "ko": "완제품 입고검사 불량율",
+  "en": "(Finished Product) Incoming Inspection Defect Rate (at FDI)",
+  "dir": "하향(낮을수록 좋음)",
+  "scale": 1,
+  "fmt": "숫자"
+ },
+ {
+  "module": "Zero defects",
+  "ko": "Fool Proof 적용률(연간 계획 대비 전체)",
+  "en": "Number of F/P Application Rate",
+  "dir": "상향(높을수록 좋음)",
+  "scale": 100,
+  "fmt": "숫자"
+ },
+ {
+  "module": "Zero defects",
+  "ko": "IQ200(생산귀책)",
+  "en": "IQ 200 Issues with Production responsibility",
+  "dir": "하향(낮을수록 좋음)",
+  "scale": 100,
+  "fmt": "숫자"
+ },
+ {
+  "module": "Zero defects",
+  "ko": "공정 불량율(생산귀책) (Basic Quality, Leakage, FDI, NDT, ISA)",
+  "en": "Process Defect Rate (Basic Quality, Leakage, FDI, NDT, ISA)",
+  "dir": "하향(낮을수록 좋음)",
+  "scale": 100,
+  "fmt": "숫자"
+ },
+ {
+  "module": "Zero defects",
+  "ko": "직행율(* 무결함으로 후공정 진행하는 비율)",
+  "en": "Direct Pass Rate",
+  "dir": "상향(높을수록 좋음)",
+  "scale": 100,
+  "fmt": "숫자"
+ },
+ {
+  "module": "Problem solving methodology",
+  "ko": "PDCA 진행률",
+  "en": "PDCA Progress Rate",
+  "dir": "상향(높을수록 좋음)",
+  "scale": 100,
+  "fmt": "숫자"
+ },
+ {
+  "module": "Problem solving methodology",
+  "ko": "중요 문제 발굴 사례 (협력사 및 사내)",
+  "en": "Important Problem Identification Cases (Supplier & Inhouse)",
+  "dir": "상향(높을수록 좋음)",
+  "scale": 1,
+  "fmt": "숫자"
+ },
+ {
+  "module": "Problem solving methodology",
+  "ko": "문제해결기법 활용인력",
+  "en": "Personnel Using Problem-Solving Techniques",
+  "dir": "상향(높을수록 좋음)",
+  "scale": 1,
+  "fmt": "숫자"
+ },
+ {
+  "module": "Problem solving methodology",
+  "ko": "문제해결기법 코칭인력",
+  "en": "Personnel Coaching Problem-Solving Techniques",
+  "dir": "상향(높을수록 좋음)",
+  "scale": 1,
+  "fmt": "숫자"
+ },
+ {
+  "module": "Improvement approach",
+  "ko": "자율개선활동 참여도",
+  "en": "Improvements Collection Rate (Team & Self)",
+  "dir": "상향(높을수록 좋음)",
+  "scale": 100,
+  "fmt": "숫자"
+ },
+ {
+  "module": "Improvement approach",
+  "ko": "소그룹활동 수평전개건수",
+  "en": "Horizontal Deployment Application Cases",
+  "dir": "상향(높을수록 좋음)",
+  "scale": 1,
+  "fmt": "숫자"
+ },
+ {
+  "module": "Improvement approach",
+  "ko": "인당 소그룹 개선건수",
+  "en": "Small-Group Improvements per Person",
+  "dir": "상향(높을수록 좋음)",
+  "scale": 1,
+  "fmt": "숫자"
+ },
+ {
+  "module": "Improvement approach",
+  "ko": "VTB 개선완료율",
+  "en": "VTB (/Improvements) Completion Rate (against suggestions from Suggestion box, 3'G walk, SIP)",
+  "dir": "상향(높을수록 좋음)",
+  "scale": 100,
+  "fmt": "숫자"
+ },
+ {
+  "module": "Improvement approach",
+  "ko": "VTB 평균 개선 리드타임",
+  "en": "Average VTB Improvement Lead Time",
+  "dir": "하향(낮을수록 좋음)",
+  "scale": 1,
+  "fmt": "숫자"
+ },
+ {
+  "module": "VSM",
+  "ko": "가치시간 비율(가치 흐름 효율, VSE)",
+  "en": "Value Time Ratio",
+  "dir": "상향(높을수록 좋음)",
+  "scale": 100,
+  "fmt": "숫자"
+ },
+ {
+  "module": "VSM",
+  "ko": "제조 리드타임(Fab.to Machine Stock)",
+  "en": "Manufacturing Lead Time (Fab Tacking to FDI out)",
+  "dir": "하향(낮을수록 좋음)",
+  "scale": 1,
+  "fmt": "숫자"
+ },
+ {
+  "module": "VSM",
+  "ko": "부품재고 회전율",
+  "en": "Parts Inventory Turnover",
+  "dir": "상향(높을수록 좋음)",
+  "scale": 1,
+  "fmt": "숫자"
+ },
+ {
+  "module": "VSM",
+  "ko": "출하 리드타임",
+  "en": "Shipment Lead Time (Wait Time)",
+  "dir": "하향(낮을수록 좋음)",
+  "scale": 1,
+  "fmt": "숫자"
+ },
+ {
+  "module": "5S",
+  "ko": "표준화 건수",
+  "en": "Advance 5'S Application Cases",
+  "dir": "상향(높을수록 좋음)",
+  "scale": 1,
+  "fmt": "숫자"
+ },
+ {
+  "module": "5S",
+  "ko": "불합리 개선건수 (또는 개선율)",
+  "en": "5'S Audit Non-Compliance Closure Rate",
+  "dir": "상향(높을수록 좋음)",
+  "scale": 100,
+  "fmt": "숫자"
+ },
+ {
+  "module": "5S",
+  "ko": "5S Audit 점수",
+  "en": "5S Audit Score",
+  "dir": "상향(높을수록 좋음)",
+  "scale": 100,
+  "fmt": "숫자"
+ },
+ {
+  "module": "TPM",
+  "ko": "자주보전 적용 신규 설비 대수 (ABC 등급)",
+  "en": "Autonomous Maintenance Application Rate",
+  "dir": "상향(높을수록 좋음)",
+  "scale": 100,
+  "fmt": "숫자"
+ },
+ {
+  "module": "TPM",
+  "ko": "MTTR(평균 고장시간)",
+  "en": "MTTR (Mean Time To Repair)",
+  "dir": "하향(낮을수록 좋음)",
+  "scale": 1,
+  "fmt": "시간serial"
+ },
+ {
+  "module": "TPM",
+  "ko": "MTBF(평균 고장간격)",
+  "en": "MTBF (Mean Time Between Failure)",
+  "dir": "상향(높을수록 좋음)",
+  "scale": 1,
+  "fmt": "시간serial"
+ },
+ {
+  "module": "TPM",
+  "ko": "MTTD(초기고장 대응시간)",
+  "en": "MTTD : Mean Time To Detect",
+  "dir": "하향(낮을수록 좋음)",
+  "scale": 1,
+  "fmt": "시간serial"
+ },
+ {
+  "module": "TPM",
+  "ko": "설비 비가동손실MH",
+  "en": "Equipment Downtime Loss",
+  "dir": "하향(낮을수록 좋음)",
+  "scale": 1,
+  "fmt": "숫자"
+ },
+ {
+  "module": "Standard work",
+  "ko": "표준문서 기준 CTQ 준수율(전체영역)",
+  "en": "CTQ Compliance rate of Standard documents (Entire Area)",
+  "dir": "상향(높을수록 좋음)",
+  "scale": 100,
+  "fmt": "숫자"
+ },
+ {
+  "module": "Standard work",
+  "ko": "표준작업문서의 최신화 비율 (표준문서의 개정관리에 대한 지표)",
+  "en": "Standard Document Validation Rate",
+  "dir": "상향(높을수록 좋음)",
+  "scale": 100,
+  "fmt": "숫자"
+ },
+ {
+  "module": "Standard work",
+  "ko": "표준 미준수 재발율",
+  "en": "Non-Compliance Recurrence Rate",
+  "dir": "하향(낮을수록 좋음)",
+  "scale": 100,
+  "fmt": "숫자"
+ },
+ {
+  "module": "Standard work",
+  "ko": "표준작업 준수율",
+  "en": "Standard Work Compliance Rate",
+  "dir": "상향(높을수록 좋음)",
+  "scale": 100,
+  "fmt": "숫자"
+ },
+ {
+  "module": "Standard work",
+  "ko": "중요품질지표 (누락, 누유/누수, 미조임, 오조립)",
+  "en": "Critical Quality Indicator (Basic Quality)",
+  "dir": "하향(낮을수록 좋음)",
+  "scale": 1,
+  "fmt": "숫자"
+ },
+ {
+  "module": "Levelled Production",
+  "ko": "RCCP 준수율(M+1변동율)",
+  "en": "M+1 Production Volume Variation Rate",
+  "dir": "하향(낮을수록 좋음)",
+  "scale": 100,
+  "fmt": "숫자"
+ },
+ {
+  "module": "Levelled Production",
+  "ko": "MPS 준수율(Mix변동율, W+3)",
+  "en": "W+3 Mix Variation Rate",
+  "dir": "하향(낮을수록 좋음)",
+  "scale": 100,
+  "fmt": "숫자"
+ },
+ {
+  "module": "Levelled Production",
+  "ko": "오더확보율(주문배정율)- W+3 Order Intake Fulfillment (W+4 - Rolling Plan), Domestic + Export Production Plan",
+  "en": "Order Intake Fulfillment (W+4 - Rolling Plan) Domestic + Export Production Plan",
+  "dir": "상향(높을수록 좋음)",
+  "scale": 100,
+  "fmt": "숫자"
+ },
+ {
+  "module": "Levelled Production",
+  "ko": "내자재 입고 준수율",
+  "en": "Inbound Material Delivery Compliance Rate",
+  "dir": "상향(높을수록 좋음)",
+  "scale": 100,
+  "fmt": "숫자"
+ },
+ {
+  "module": "Levelled Production",
+  "ko": "월간 생산계획 준수율(Export)",
+  "en": "Monthly Shipment Plan Compliance Rate (Export)",
+  "dir": "상향(높을수록 좋음)",
+  "scale": 100,
+  "fmt": "숫자"
+ },
+ {
+  "module": "Levelled Production",
+  "ko": "옵션플래닝 정확도",
+  "en": "Option Planning Forecast Accuracy",
+  "dir": "상향(높을수록 좋음)",
+  "scale": 100,
+  "fmt": "숫자"
+ },
+ {
+  "module": "Levelled Production",
+  "ko": "생산계획 달성율(입고계획 준수율)",
+  "en": "Production Incoming Plan Compliance Rate",
+  "dir": "상향(높을수록 좋음)",
+  "scale": 100,
+  "fmt": "숫자"
+ },
+ {
+  "module": "Materials supply",
+  "ko": "미투입 & 오투입 자재공급 개선사례",
+  "en": "Mis-Input & Wrong Material Feeding Improvement Cases",
+  "dir": "상향(높을수록 좋음)",
+  "scale": 1,
+  "fmt": "숫자"
+ },
+ {
+  "module": "Materials supply",
+  "ko": "대당 비가동 손실MH(사내 PPIC 이상)",
+  "en": "Material-Induced Downtime MH",
+  "dir": "하향(낮을수록 좋음)",
+  "scale": 1,
+  "fmt": "숫자"
+ },
+ {
+  "module": "Materials supply",
+  "ko": "내자입고계획 준수율",
+  "en": "Domestic Incoming Plan Compliance Rate",
+  "dir": "상향(높을수록 좋음)",
+  "scale": 100,
+  "fmt": "숫자"
+ },
+ {
+  "module": "Materials supply",
+  "ko": "DIO(재고회전일수, Days)",
+  "en": "DIO (Days Inventory Outstanding)",
+  "dir": "상향(높을수록 좋음)",
+  "scale": 1,
+  "fmt": "숫자"
+ },
+ {
+  "module": "Materials supply",
+  "ko": "재고일치율",
+  "en": "Inventory Accuracy Rate",
+  "dir": "상향(높을수록 좋음)",
+  "scale": 100,
+  "fmt": "숫자"
+ },
+ {
+  "module": "Materials supply",
+  "ko": "장기재고금액",
+  "en": "Long-Term Inventory Value (6 month basis)",
+  "dir": "하향(낮을수록 좋음)",
+  "scale": 1,
+  "fmt": "숫자"
+ },
+ {
+  "module": "Continuous flow production",
+  "ko": "생산라인별 표준재공 준수율(제관)",
+  "en": "WIP compliance rate (Fabrication)",
+  "dir": "상향(높을수록 좋음)",
+  "scale": 100,
+  "fmt": "숫자"
+ },
+ {
+  "module": "Continuous flow production",
+  "ko": "생산라인별 표준재공 준수율(L/Out~Test)",
+  "en": "WIP compliance rate(Assy Line On- Line-Out )",
+  "dir": "상향(높을수록 좋음)",
+  "scale": 100,
+  "fmt": "숫자"
+ },
+ {
+  "module": "Continuous flow production",
+  "ko": "생산라인별 제조 리드타임",
+  "en": "Lead Time by Production Line (Cutting To Dispatch)",
+  "dir": "하향(낮을수록 좋음)",
+  "scale": 1,
+  "fmt": "숫자"
+ },
+ {
+  "module": "Continuous flow production",
+  "ko": "생산라인별 순서생산 준수율",
+  "en": "Sequence Compliance Rate by Line",
+  "dir": "상향(높을수록 좋음)",
+  "scale": 100,
+  "fmt": "숫자"
+ },
+ {
+  "module": "LOB",
+  "ko": "라인 편성효율(T/T기준, 운영효율이슈)",
+  "en": "Fabrication - Weighted Average ACTUAL LOB Efficiency",
+  "dir": "상향(높을수록 좋음)",
+  "scale": 100,
+  "fmt": "숫자"
+ },
+ {
+  "module": "LOB",
+  "ko": "비계획 VS 계획 O/T 비율",
+  "en": "Unplan vs. Plan Overtime Rate",
+  "dir": "하향(낮을수록 좋음)",
+  "scale": 100,
+  "fmt": "숫자"
+ },
+ {
+  "module": "LOB",
+  "ko": "표준작업표를 활용한 비부가가치작업 개선사례",
+  "en": "NVA reduction cases reflecting from SWC & SWCT",
+  "dir": "상향(높을수록 좋음)",
+  "scale": 1,
+  "fmt": "숫자"
+ },
+ {
+  "module": "LOB",
+  "ko": "대당 투입MH (제관)",
+  "en": "Input MH per machine Fabrication",
+  "dir": "하향(낮을수록 좋음)",
+  "scale": 1,
+  "fmt": "숫자"
+ },
+ {
+  "module": "LOB",
+  "ko": "대당 투입MH (조립)",
+  "en": "Input MH per machine Assembly",
+  "dir": "하향(낮을수록 좋음)",
+  "scale": 1,
+  "fmt": "숫자"
+ },
+ {
+  "module": "LOB",
+  "ko": "라인 편성효율(병목공정 기준, 공정설계이슈)",
+  "en": "Balancing Efficiency",
+  "dir": "상향(높을수록 좋음)",
+  "scale": 100,
+  "fmt": "숫자"
+ },
+ {
+  "module": "LOB",
+  "ko": "대당 O/T MH",
+  "en": "OT MH per Unit",
+  "dir": "하향(낮을수록 좋음)",
+  "scale": 1,
+  "fmt": "숫자"
+ },
+ {
+  "module": "Pull System",
+  "ko": "표준재공 준수율",
+  "en": "Min/Max compliance rate of input materials by process",
+  "dir": "상향(높을수록 좋음)",
+  "scale": 100,
+  "fmt": "숫자"
+ },
+ {
+  "module": "EHS",
+  "ko": "불안전한 행동/위험 발굴건수",
+  "en": "Unsafe Act & Condition Identification",
+  "dir": "상향(높을수록 좋음)",
+  "scale": 1,
+  "fmt": "숫자"
+ },
+ {
+  "module": "EHS",
+  "ko": "자발적 위험요인 개선 완료율",
+  "en": "HIRA & EARA Risk Reduction Cases",
+  "dir": "상향(높을수록 좋음)",
+  "scale": 1,
+  "fmt": "숫자"
+ },
+ {
+  "module": "EHS",
+  "ko": "EHS 리더십 점검 개선완료율",
+  "en": "EHS Leadership Inspection Improvement Completion Rate",
+  "dir": "상향(높을수록 좋음)",
+  "scale": 100,
+  "fmt": "숫자"
+ },
+ {
+  "module": "EHS",
+  "ko": "LTIR(근로손실 사고율)",
+  "en": "LTIR (Lost Time Incident Rate)",
+  "dir": "상향(높을수록 좋음)",
+  "scale": 1,
+  "fmt": "숫자"
+ },
+ {
+  "module": "EHS",
+  "ko": "중대사고 재해건수",
+  "en": "Incident/Accident Count",
+  "dir": "하향(낮을수록 좋음)",
+  "scale": 1,
+  "fmt": "숫자"
+ },
+ {
+  "module": "Issue Escalation",
+  "ko": "미결조치 리드타임",
+  "en": "Pending Action Lead Time (Issues closure time/machine)",
+  "dir": "하향(낮을수록 좋음)",
+  "scale": 1,
+  "fmt": "숫자"
+ },
+ {
+  "module": "Cross Functional Work",
+  "ko": "개인별 3공정 달성율(조립)",
+  "en": "3 process achievement rate per person (Assembly)",
+  "dir": "상향(높을수록 좋음)",
+  "scale": 100,
+  "fmt": "숫자"
+ },
+ {
+  "module": "Cross Functional Work",
+  "ko": "개인별 3공정 달성율(완성도장)",
+  "en": "3 process achievement rate per person (Final Painting)",
+  "dir": "상향(높을수록 좋음)",
+  "scale": 100,
+  "fmt": "숫자"
+ },
+ {
+  "module": "Cross Functional Work",
+  "ko": "개인별 3공정 달성율(시운전)",
+  "en": "3 process achievement rate per person (Performance)",
+  "dir": "상향(높을수록 좋음)",
+  "scale": 100,
+  "fmt": "숫자"
+ },
+ {
+  "module": "Cross Functional Work",
+  "ko": "개인별 3공정 달성율(절단)",
+  "en": "3 process achievement rate per person (Cutting)",
+  "dir": "상향(높을수록 좋음)",
+  "scale": 100,
+  "fmt": "숫자"
+ },
+ {
+  "module": "Cross Functional Work",
+  "ko": "개인별 3공정 달성율(제관)",
+  "en": "3 process achievement rate per person (Fabrication)",
+  "dir": "상향(높을수록 좋음)",
+  "scale": 100,
+  "fmt": "숫자"
+ },
+ {
+  "module": "Cross Functional Work",
+  "ko": "개인별 3공정 달성율(부품도장)",
+  "en": "3 process achievement rate per person (Parts Painting)",
+  "dir": "상향(높을수록 좋음)",
+  "scale": 100,
+  "fmt": "숫자"
+ },
+ {
+  "module": "Cross Functional Work",
+  "ko": "공정별 3공정 달성율(조립)",
+  "en": "3 people achievement rate per process (Assembly)",
+  "dir": "상향(높을수록 좋음)",
+  "scale": 100,
+  "fmt": "숫자"
+ },
+ {
+  "module": "Cross Functional Work",
+  "ko": "공정별 3인 달성율(완성도장)",
+  "en": "3 people achievement rate per process (Final Painting)",
+  "dir": "상향(높을수록 좋음)",
+  "scale": 100,
+  "fmt": "숫자"
+ },
+ {
+  "module": "Cross Functional Work",
+  "ko": "공정별 3인 달성율(시운전)",
+  "en": "3 people achievement rate per process (Performance)",
+  "dir": "상향(높을수록 좋음)",
+  "scale": 100,
+  "fmt": "숫자"
+ },
+ {
+  "module": "Cross Functional Work",
+  "ko": "공정별 3인 달성율(절단)",
+  "en": "3 people achievement rate per process (Cutting)",
+  "dir": "상향(높을수록 좋음)",
+  "scale": 100,
+  "fmt": "숫자"
+ },
+ {
+  "module": "Cross Functional Work",
+  "ko": "공정별 3인 달성율(제관)",
+  "en": "3 people achievement rate per process (Fabrication)",
+  "dir": "상향(높을수록 좋음)",
+  "scale": 100,
+  "fmt": "숫자"
+ },
+ {
+  "module": "Cross Functional Work",
+  "ko": "공정별 3인 달성율(부품도장)",
+  "en": "3 people achievement rate per process (Parts Painting)",
+  "dir": "상향(높을수록 좋음)",
+  "scale": 100,
+  "fmt": "숫자"
+ },
+ {
+  "module": "Quality Assurance",
+  "ko": "부품 공정 불량율",
+  "en": "Process Defect Rate (Parts from Local Supplier)",
+  "dir": "하향(낮을수록 좋음)",
+  "scale": 1,
+  "fmt": "숫자"
+ },
+ {
+  "module": "Zero Defect",
+  "ko": "Fool Proof 적용률(* 사업장별 목표기준)",
+  "en": "Fool Proof Application Rate",
+  "dir": "상향(높을수록 좋음)",
+  "scale": 100,
+  "fmt": "숫자"
+ },
+ {
+  "module": "Zero Defect",
+  "ko": "직행율(* 무결함으로 후공정 진행하는 비율)  - 성능직행률",
+  "en": "Direct Pass Rate (Performance)",
+  "dir": "상향(높을수록 좋음)",
+  "scale": 100,
+  "fmt": "숫자"
+ },
+ {
+  "module": "Zero Defect",
+  "ko": "직행율(* 무결함으로 후공정 진행하는 비율)  - FDI직행률",
+  "en": "Direct Pass Rate (FDI)",
+  "dir": "상향(높을수록 좋음)",
+  "scale": 100,
+  "fmt": "숫자"
+ },
+ {
+  "module": "VSM",
+  "ko": "제조 리드타임(Fab Tacking to FDI out)",
+  "en": "Manufacturing Lead Time (Fab Tacking to FDI out)",
+  "dir": "하향(낮을수록 좋음)",
+  "scale": 1,
+  "fmt": "숫자"
+ },
+ {
+  "module": "5S",
+  "ko": "불합리 개선건수 (또는 개선율)  - 5S Improvement Rate",
+  "en": "5S Improvement Rate",
+  "dir": "상향(높을수록 좋음)",
+  "scale": 100,
+  "fmt": "숫자"
+ },
+ {
+  "module": "TPM",
+  "ko": "설비 비가동손실MH  - A급설비 기준",
+  "en": "Equipment Downtime Loss (Class A Equipment)",
+  "dir": "하향(낮을수록 좋음)",
+  "scale": 1,
+  "fmt": "숫자"
+ },
+ {
+  "module": "Standardized Work",
+  "ko": "표준작업문서의 최신화 비율 (표준문서의 개정관리에 대한 지표)",
+  "en": "Standards Documents Revision Rate",
+  "dir": "상향(높을수록 좋음)",
+  "scale": 100,
+  "fmt": "숫자"
+ },
+ {
+  "module": "Standardized Work",
+  "ko": "표준작업 미준수 재발율",
+  "en": "Non-Compliance Recurrence Rate",
+  "dir": "하향(낮을수록 좋음)",
+  "scale": 100,
+  "fmt": "숫자"
+ },
+ {
+  "module": "Standardized Work",
+  "ko": "표준작업 준수율",
+  "en": "Standard Work Compliance Rate",
+  "dir": "상향(높을수록 좋음)",
+  "scale": 100,
+  "fmt": "숫자"
+ },
+ {
+  "module": "Standardized Work",
+  "ko": "중요품질지표 (누락, 누유/누수, 미조임, 오조립)",
+  "en": "Critical Quality Indicator (Basic Quality - omissions, leaks, under/over-tightening, misassembly, interference /alignment)",
+  "dir": "하향(낮을수록 좋음)",
+  "scale": 1,
+  "fmt": "숫자"
+ },
+ {
+  "module": "Levelled Production",
+  "ko": "오더확보율(주문배정율) - 3주 굴착기",
+  "en": "Order Intake (W+3) - Excavator",
+  "dir": "상향(높을수록 좋음)",
+  "scale": 100,
+  "fmt": "숫자"
+ },
+ {
+  "module": "Levelled Production",
+  "ko": "오더확보율(주문배정율) - 3주 휠로더",
+  "en": "Order Intake (W+3) - Wheel Loader",
+  "dir": "상향(높을수록 좋음)",
+  "scale": 100,
+  "fmt": "숫자"
+ },
+ {
+  "module": "Levelled Production",
+  "ko": "생산오더 변경비율(또는 확정계획준수율)",
+  "en": "Production Order Change Ratio",
+  "dir": "하향(낮을수록 좋음)",
+  "scale": 100,
+  "fmt": "숫자"
+ },
+ {
+  "module": "Levelled Production",
+  "ko": "외자재 입고 준수율(또는 외자재 OC 접수율)",
+  "en": "Imported Material Delivery Compliance Rate",
+  "dir": "상향(높을수록 좋음)",
+  "scale": 100,
+  "fmt": "숫자"
+ },
+ {
+  "module": "Levelled Production",
+  "ko": "월간 생산계획 준수율  - Monthly Shipment Plan Compliance Rate",
+  "en": "Monthly Shipment Plan Compliance Rate",
+  "dir": "상향(높을수록 좋음)",
+  "scale": 100,
+  "fmt": "숫자"
+ },
+ {
+  "module": "Material Supply",
+  "ko": "전 공정(Line-side) 투입 자재 감사 평균 준수율",
+  "en": "Line-side material Min-Max Compliance Rate",
+  "dir": "상향(높을수록 좋음)",
+  "scale": 100,
+  "fmt": "숫자"
+ },
+ {
+  "module": "Material Supply",
+  "ko": "대당 비가동 손실MH(사내 PPIC 이상)",
+  "en": "Material-Induced Downtime MH",
+  "dir": "하향(낮을수록 좋음)",
+  "scale": 1,
+  "fmt": "숫자"
+ },
+ {
+  "module": "Material Supply",
+  "ko": "내자입고계획 준수율",
+  "en": "Domestic Incoming Plan Compliance Rate",
+  "dir": "상향(높을수록 좋음)",
+  "scale": 100,
+  "fmt": "숫자"
+ },
+ {
+  "module": "Material Supply",
+  "ko": "재고일치율",
+  "en": "Inventory Accuracy Rate (Cycle Counting)",
+  "dir": "상향(높을수록 좋음)",
+  "scale": 100,
+  "fmt": "숫자"
+ },
+ {
+  "module": "Material Supply",
+  "ko": "장기재고금액(",
+  "en": "Long-Term Inventory Value (6 month basis)",
+  "dir": "하향(낮을수록 좋음)",
+  "scale": 1,
+  "fmt": "숫자"
+ },
+ {
+  "module": "Continuous flow production",
+  "ko": "생산라인별 표준재공 준수율(조립)",
+  "en": "WIP compliance rate (Assembly)",
+  "dir": "상향(높을수록 좋음)",
+  "scale": 100,
+  "fmt": "숫자"
+ },
+ {
+  "module": "Continuous flow production",
+  "ko": "재공 축소 수량",
+  "en": "WIP Reduction Cases",
+  "dir": "상향(높을수록 좋음)",
+  "scale": 1,
+  "fmt": "숫자"
+ },
+ {
+  "module": "Continuous flow production",
+  "ko": "생산라인 제조 리드타임",
+  "en": "Lead Time by Production Line",
+  "dir": "하향(낮을수록 좋음)",
+  "scale": 1,
+  "fmt": "숫자"
+ },
+ {
+  "module": "LOB",
+  "ko": "대당 투입MH(제관)",
+  "en": "Input MH per machine Fabrication",
+  "dir": "하향(낮을수록 좋음)",
+  "scale": 1,
+  "fmt": "숫자"
+ },
+ {
+  "module": "LOB",
+  "ko": "대당 투입MH(조립) - 굴착기",
+  "en": "Input MH per machine Assembly (Ex)",
+  "dir": "하향(낮을수록 좋음)",
+  "scale": 1,
+  "fmt": "숫자"
+ },
+ {
+  "module": "LOB",
+  "ko": "대당 투입MH(조립) - 휠로더",
+  "en": "Input MH per machine Assembly (WL)",
+  "dir": "하향(낮을수록 좋음)",
+  "scale": 1,
+  "fmt": "숫자"
+ },
+ {
+  "module": "LOB",
+  "ko": "라인 편성효율(T/T기준, 운영효율이슈)  - 굴착기/조립",
+  "en": "Balancing Efficiency (Assembly Excavator)",
+  "dir": "상향(높을수록 좋음)",
+  "scale": 100,
+  "fmt": "숫자"
+ },
+ {
+  "module": "LOB",
+  "ko": "라인 편성효율(병목공정 기준, 공정설계이슈)   - 굴착기/제관",
+  "en": "Balancing Efficiency (Fabrication Excavator)",
+  "dir": "상향(높을수록 좋음)",
+  "scale": 100,
+  "fmt": "숫자"
+ },
+ {
+  "module": "Pull System",
+  "ko": "라인사이드 자재 감축 개선 건수(가공, 조립)",
+  "en": "Line-side material Reduction Cases",
+  "dir": "상향(높을수록 좋음)",
+  "scale": 1,
+  "fmt": "숫자"
+ }
+]
