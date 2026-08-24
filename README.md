@@ -158,7 +158,7 @@
 이미 만들어 두었습니다. 절차는 [`supabase/README.md`](supabase/README.md) 를 보세요. 요약하면:
 
 1. `supabase/schema.sql` 을 Supabase SQL Editor 에서 실행 (테이블 7종 + 함수 3종 + 뷰 3종 + RLS)
-2. `hdp11_admin` 에 관리자 계정 등록
+2. `admin` 에 관리자 계정 등록
 3. `js/config.js` 의 `USE_SUPABASE` 를 `true` 로 — 또는 주소에 `?supabase=1` 을 붙여 미리 확인
 
 읽기는 로그인 사용자 전체, 쓰기는 관리자만, 실행로그는 **고치거나 지울 수 없습니다.**

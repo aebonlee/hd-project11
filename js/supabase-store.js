@@ -15,7 +15,7 @@
 })(typeof self !== 'undefined' ? self : this, function (root) {
   'use strict';
 
-  var P = (root.APP_CONFIG && root.APP_CONFIG.TABLE_PREFIX) || 'hdp11_';
+  var P = (root.APP_CONFIG && root.APP_CONFIG.TABLE_PREFIX) || '';
   var client = null;
   var db = null;          // 메모리에 올린 전체 데이터 (Store 와 같은 모양)
   var lastError = null;

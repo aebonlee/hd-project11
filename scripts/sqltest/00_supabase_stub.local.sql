@@ -17,7 +17,6 @@ begin
 end;
 $guard$;
 
--- Supabase 가 기본 제공하는 역할
 do $roles$
 begin
   if not exists (select 1 from pg_roles where rolname = 'anon') then
@@ -39,7 +38,6 @@ grant usage on schema public to anon, authenticated, service_role;
 alter default privileges in schema public
   grant execute on functions to anon, authenticated, service_role;
 
--- auth 스키마 스텁
 create schema if not exists auth;
 
 create table if not exists auth.users (
@@ -47,13 +45,8 @@ create table if not exists auth.users (
   email text
 );
 
--- 현재 로그인 사용자. 테스트에서 set_config 로 바꿔 가며 역할을 흉내 낸다.
 create or replace function auth.uid()
-returns uuid
-language sql
-stable
-set search_path = auth, public
-as $fn$
+returns uuid language sql stable set search_path = auth, public as $fn$
   select nullif(current_setting('request.jwt.claim.sub', true), '')::uuid;
 $fn$;
 

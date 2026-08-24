@@ -5,9 +5,9 @@
 --  실행 위치 : Supabase Dashboard → SQL Editor
 --  재실행    : 안전합니다 (IF NOT EXISTS / DROP ... IF EXISTS 선행)
 --
---  ⚠ 이 프로젝트는 전 사이트가 하나의 Supabase 프로젝트를 함께 씁니다.
---    그래서 테이블·함수·정책 이름에 반드시 `hdp11_` 접두사를 붙입니다.
---    접두사 없이 `site`·`kpi`·`contact` 같은 이름을 쓰면 다른 사이트와 충돌합니다.
+--  이 스키마는 **수강생 본인의 Supabase 프로젝트**에 올리는 것을 전제로 합니다.
+--  프로젝트가 본인 것이라 테이블 이름에 접두사를 붙이지 않았습니다.
+--  (여러 앱을 한 프로젝트에 몰아 쓸 계획이면 이름 충돌을 먼저 확인하세요.)
 -- ============================================================================
 
 -- ----------------------------------------------------------------------------
@@ -15,7 +15,7 @@
 -- ----------------------------------------------------------------------------
 
 -- 사업장 (울산·인천·군산·인도·브라질 …)
-create table if not exists public.hdp11_site (
+create table if not exists public.site (
   id          text primary key,                     -- 'IND', 'BRA' …
   name        text not null,
   region      text,
@@ -24,9 +24,9 @@ create table if not exists public.hdp11_site (
 );
 
 -- 성과지표
-create table if not exists public.hdp11_kpi (
+create table if not exists public.kpi (
   id           text primary key,                    -- 'IND-EHS-004'
-  site_id      text not null references public.hdp11_site(id) on delete cascade,
+  site_id      text not null references public.site(id) on delete cascade,
   module       text not null,                       -- 국문 모듈명 (안전과환경 …)
   module_code  text,                                -- EHS, TPM, VSM …
   name_ko      text not null,
@@ -44,45 +44,45 @@ create table if not exists public.hdp11_kpi (
   sort_order   int,
   created_at   timestamptz not null default now()
 );
-create index if not exists hdp11_kpi_site_idx on public.hdp11_kpi (site_id);
+create index if not exists kpi_site_idx on public.kpi (site_id);
 
 -- 월별 실적
-create table if not exists public.hdp11_actual (
+create table if not exists public.actual (
   id          bigint generated always as identity primary key,
-  kpi_id      text not null references public.hdp11_kpi(id) on delete cascade,
+  kpi_id      text not null references public.kpi(id) on delete cascade,
   month       text not null check (month ~ '^(1[0-2]|[1-9])월$'),
   value       numeric,
   source      text,                                 -- 'import' | 'manual'
   updated_at  timestamptz not null default now(),
   -- 같은 지표·같은 달은 한 행만. 중복 방지는 클라이언트가 아니라 여기서 한다.
   -- ⚠ 프런트에서 upsert 할 때 onConflict 를 이 제약 이름과 같은 컬럼 조합으로 지정할 것.
-  constraint hdp11_actual_kpi_month_key unique (kpi_id, month)
+  constraint actual_kpi_month_key unique (kpi_id, month)
 );
-create index if not exists hdp11_actual_month_idx on public.hdp11_actual (month);
+create index if not exists actual_month_idx on public.actual (month);
 
 -- 매핑표 (원본 영문 지표명 ↔ 총괄 지표)
-create table if not exists public.hdp11_mapping (
+create table if not exists public.mapping (
   id          bigint generated always as identity primary key,
-  site_id     text not null references public.hdp11_site(id) on delete cascade,
-  kpi_id      text references public.hdp11_kpi(id) on delete set null,
+  site_id     text not null references public.site(id) on delete cascade,
+  kpi_id      text references public.kpi(id) on delete set null,
   kpi_en      text not null,
   excluded    boolean not null default false,       -- '제외' 지표 (현지 자체관리)
   note        text,
-  constraint hdp11_mapping_site_en_key unique (site_id, kpi_en)
+  constraint mapping_site_en_key unique (site_id, kpi_en)
 );
 
 -- 담당자 (팀별 수신자)
-create table if not exists public.hdp11_contact (
+create table if not exists public.contact (
   id          bigint generated always as identity primary key,
-  site_id     text not null references public.hdp11_site(id) on delete cascade,
+  site_id     text not null references public.site(id) on delete cascade,
   owner       text not null,                        -- 팀/부서명
   name        text,
   email       text,
-  constraint hdp11_contact_site_owner_key unique (site_id, owner)
+  constraint contact_site_owner_key unique (site_id, owner)
 );
 
 -- 실행로그 — 기록성 테이블이라 UPDATE/DELETE 정책을 두지 않는다(사후 조작 방지)
-create table if not exists public.hdp11_log (
+create table if not exists public.log (
   id          bigint generated always as identity primary key,
   ran_at      timestamptz not null default now(),
   kind        text not null,                        -- '데이터 자동입력' | '달성 판정' | '미달성 메일'
@@ -93,10 +93,10 @@ create table if not exists public.hdp11_log (
   note        text,
   actor       uuid default auth.uid()
 );
-create index if not exists hdp11_log_ran_at_idx on public.hdp11_log (ran_at desc);
+create index if not exists log_ran_at_idx on public.log (ran_at desc);
 
 -- 관리자 (이 사이트를 운영하는 사람)
-create table if not exists public.hdp11_admin (
+create table if not exists public.admin (
   user_id     uuid primary key,
   email       text,
   created_at  timestamptz not null default now()
@@ -110,18 +110,18 @@ create table if not exists public.hdp11_admin (
 -- ----------------------------------------------------------------------------
 
 -- 이 사람이 이 사이트의 관리자인가
-create or replace function public.hdp11_is_admin()
+create or replace function public.is_admin()
 returns boolean
 language sql
 stable
 security definer
 set search_path = public
 as $fn$
-  select exists (select 1 from public.hdp11_admin a where a.user_id = auth.uid());
+  select exists (select 1 from public.admin a where a.user_id = auth.uid());
 $fn$;
 
 -- 값 하나를 총괄 기준 숫자로 변환 (js/logic.js convertValue 와 같은 규칙)
-create or replace function public.hdp11_convert_value(
+create or replace function public.convert_value(
   p_raw text, p_scale numeric, p_format text
 ) returns numeric
 language plpgsql
@@ -181,7 +181,7 @@ end;
 $fn$;
 
 -- 실적 하나의 달성 여부
-create or replace function public.hdp11_judge(
+create or replace function public.judge(
   p_actual numeric, p_target numeric, p_direction text, p_tolerance numeric default null
 ) returns text
 language plpgsql
@@ -210,7 +210,7 @@ $fn$;
 -- 3. 뷰 — 판정 결과 / 미달성 목록 / 사업장 요약
 -- ----------------------------------------------------------------------------
 
-create or replace view public.hdp11_evaluation as
+create or replace view public.evaluation as
 select
   k.id            as kpi_id,
   k.site_id,
@@ -223,7 +223,7 @@ select
   k.target,
   a.month,
   a.value         as actual,
-  public.hdp11_judge(a.value, k.target, k.direction, k.tolerance) as status,
+  public.judge(a.value, k.target, k.direction, k.tolerance) as status,
   -- gap 부호는 방향과 무관하게 "양수면 좋은 쪽"
   case
     when a.value is null or k.target is null then null
@@ -231,14 +231,14 @@ select
     when k.direction in ('목표일치', '범위내')  then -abs(a.value - k.target)
     else a.value - k.target
   end as gap
-from public.hdp11_kpi k
-join public.hdp11_site s on s.id = k.site_id
-left join public.hdp11_actual a on a.kpi_id = k.id;
+from public.kpi k
+join public.site s on s.id = k.site_id
+left join public.actual a on a.kpi_id = k.id;
 
-create or replace view public.hdp11_underperformance as
-select * from public.hdp11_evaluation where status = '미달성';
+create or replace view public.underperformance as
+select * from public.evaluation where status = '미달성';
 
-create or replace view public.hdp11_site_summary as
+create or replace view public.site_summary as
 select
   site_id,
   site_name,
@@ -255,7 +255,7 @@ select
       count(*) filter (where status = '달성')::numeric
       / count(*) filter (where status in ('달성', '미달성')) * 100, 1)
   end as rate
-from public.hdp11_evaluation
+from public.evaluation
 where month is not null
 group by site_id, site_name, month;
 
@@ -266,19 +266,19 @@ group by site_id, site_name, month;
 --  읽기는 로그인 사용자, 쓰기는 관리자만.
 -- ----------------------------------------------------------------------------
 
-alter table public.hdp11_site    enable row level security;
-alter table public.hdp11_kpi     enable row level security;
-alter table public.hdp11_actual  enable row level security;
-alter table public.hdp11_mapping enable row level security;
-alter table public.hdp11_contact enable row level security;
-alter table public.hdp11_log     enable row level security;
-alter table public.hdp11_admin   enable row level security;
+alter table public.site    enable row level security;
+alter table public.kpi     enable row level security;
+alter table public.actual  enable row level security;
+alter table public.mapping enable row level security;
+alter table public.contact enable row level security;
+alter table public.log     enable row level security;
+alter table public.admin   enable row level security;
 
 do $rls$
 declare
   t text;
 begin
-  foreach t in array array['hdp11_site','hdp11_kpi','hdp11_actual','hdp11_mapping','hdp11_contact']
+  foreach t in array array['site','kpi','actual','mapping','contact']
   loop
     execute format('drop policy if exists %I on public.%I', t || '_read',   t);
     execute format('drop policy if exists %I on public.%I', t || '_write',  t);
@@ -289,13 +289,13 @@ begin
       'create policy %I on public.%I for select to authenticated using (true)',
       t || '_read', t);
     execute format(
-      'create policy %I on public.%I for insert to authenticated with check (public.hdp11_is_admin())',
+      'create policy %I on public.%I for insert to authenticated with check (public.is_admin())',
       t || '_write', t);
     execute format(
-      'create policy %I on public.%I for update to authenticated using (public.hdp11_is_admin()) with check (public.hdp11_is_admin())',
+      'create policy %I on public.%I for update to authenticated using (public.is_admin()) with check (public.is_admin())',
       t || '_update', t);
     execute format(
-      'create policy %I on public.%I for delete to authenticated using (public.hdp11_is_admin())',
+      'create policy %I on public.%I for delete to authenticated using (public.is_admin())',
       t || '_delete', t);
   end loop;
 end;
@@ -303,14 +303,14 @@ $rls$;
 
 -- 실행로그 — 남기고 읽을 수는 있으나 고치거나 지울 수는 없다.
 -- UPDATE/DELETE 정책을 아예 만들지 않는 것이 곧 금지다.
-drop policy if exists hdp11_log_read on public.hdp11_log;
-drop policy if exists hdp11_log_write on public.hdp11_log;
-create policy hdp11_log_read  on public.hdp11_log for select to authenticated using (true);
-create policy hdp11_log_write on public.hdp11_log for insert to authenticated with check (true);
+drop policy if exists log_read on public.log;
+drop policy if exists log_write on public.log;
+create policy log_read  on public.log for select to authenticated using (true);
+create policy log_write on public.log for insert to authenticated with check (true);
 
 -- 관리자 목록은 관리자만 본다
-drop policy if exists hdp11_admin_read on public.hdp11_admin;
-create policy hdp11_admin_read on public.hdp11_admin for select to authenticated using (public.hdp11_is_admin());
+drop policy if exists admin_read on public.admin;
+create policy admin_read on public.admin for select to authenticated using (public.is_admin());
 
 -- ----------------------------------------------------------------------------
 -- 5. 함수 실행 권한
@@ -322,13 +322,13 @@ create policy hdp11_admin_read on public.hdp11_admin for select to authenticated
 --    PUBLIC 만 지우면 anon=X 가 남아 비로그인 호출이 그대로 뚫린다.
 -- ----------------------------------------------------------------------------
 
-revoke all on function public.hdp11_is_admin()                            from public, anon;
-revoke all on function public.hdp11_convert_value(text, numeric, text)    from public, anon;
-revoke all on function public.hdp11_judge(numeric, numeric, text, numeric) from public, anon;
+revoke all on function public.is_admin()                            from public, anon;
+revoke all on function public.convert_value(text, numeric, text)    from public, anon;
+revoke all on function public.judge(numeric, numeric, text, numeric) from public, anon;
 
-grant execute on function public.hdp11_is_admin()                            to authenticated;
-grant execute on function public.hdp11_convert_value(text, numeric, text)    to authenticated;
-grant execute on function public.hdp11_judge(numeric, numeric, text, numeric) to authenticated;
+grant execute on function public.is_admin()                            to authenticated;
+grant execute on function public.convert_value(text, numeric, text)    to authenticated;
+grant execute on function public.judge(numeric, numeric, text, numeric) to authenticated;
 
 -- 확인용 — anon 에 EXECUTE 가 남아 있지 않아야 한다.
 --   select proname, array_to_string(proacl, E'\n')
@@ -339,7 +339,7 @@ grant execute on function public.hdp11_judge(numeric, numeric, text, numeric) to
 -- 6. 시드 (사업장·팀만. KPI 는 화면의 엑셀 임포트로 넣는다)
 -- ----------------------------------------------------------------------------
 
-insert into public.hdp11_site (id, name, region) values
+insert into public.site (id, name, region) values
   ('ULS', '울산캠퍼스', '국내'),
   ('ICN', '인천공장',   '국내'),
   ('GSN', '군산공장',   '국내'),
@@ -348,9 +348,9 @@ insert into public.hdp11_site (id, name, region) values
   ('EUR', '유럽법인',   '해외')
 on conflict (id) do nothing;
 
-insert into public.hdp11_contact (site_id, owner)
+insert into public.contact (site_id, owner)
 select s.id, o
-from public.hdp11_site s
+from public.site s
 cross join unnest(array[
   'ALC','EHS팀','PPIC팀','보전팀','생기팀','생산운영팀','생산팀','품질팀','혁신팀','전체 팀'
 ]) as o
@@ -358,7 +358,7 @@ on conflict (site_id, owner) do nothing;
 
 -- ----------------------------------------------------------------------------
 -- 끝. 관리자 등록은 계정 생성 후 아래를 실행합니다.
---   insert into public.hdp11_admin (user_id, email)
+--   insert into public.admin (user_id, email)
 --   select id, email from auth.users where email = '<관리자 이메일>'
 --   on conflict (user_id) do nothing;
 -- ----------------------------------------------------------------------------

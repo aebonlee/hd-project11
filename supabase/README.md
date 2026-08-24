@@ -9,26 +9,26 @@
 
 전 사이트가 **Supabase 프로젝트 하나**(`hcmgdztsgjvzcyxyayaj`)를 함께 씁니다.
 테이블이 이미 수백 개라, 접두사 없이 `site`·`kpi`·`contact` 같은 이름을 쓰면 다른 사이트와 충돌합니다.
-그래서 이 프로젝트의 테이블·함수·정책은 **전부 `hdp11_` 로 시작**합니다.
+그래서 이 프로젝트의 테이블·함수·정책은 **전부 `` 로 시작**합니다.
 
 | 테이블 | 담는 것 |
 |---|---|
-| `hdp11_site` | 사업장 (울산·인천·군산·인도·브라질·유럽) |
-| `hdp11_kpi` | 성과지표 (모듈·지표명·단위·판정방향·목표·담당팀·환산배율·값형식) |
-| `hdp11_actual` | 월별 실적 — `(kpi_id, month)` UNIQUE |
-| `hdp11_mapping` | 매핑표 (원본 영문 지표명 ↔ 총괄 지표) |
-| `hdp11_contact` | 팀별 담당자·이메일 |
-| `hdp11_log` | 실행로그 (INSERT·SELECT 만 가능) |
-| `hdp11_admin` | 이 사이트 관리자 |
+| `site` | 사업장 (울산·인천·군산·인도·브라질·유럽) |
+| `kpi` | 성과지표 (모듈·지표명·단위·판정방향·목표·담당팀·환산배율·값형식) |
+| `actual` | 월별 실적 — `(kpi_id, month)` UNIQUE |
+| `mapping` | 매핑표 (원본 영문 지표명 ↔ 총괄 지표) |
+| `contact` | 팀별 담당자·이메일 |
+| `log` | 실행로그 (INSERT·SELECT 만 가능) |
+| `admin` | 이 사이트 관리자 |
 
 | 함수 / 뷰 | 하는 일 |
 |---|---|
-| `hdp11_convert_value(raw, scale, format)` | 환산배율·시간serial·퍼센트텍스트 변환 (매크로 `modImport`) |
-| `hdp11_judge(actual, target, direction, tol)` | 달성/미달성/판정불가 (매크로 `modCheck`) |
-| `hdp11_is_admin()` | RLS 판정용 |
-| `hdp11_evaluation` | 지표 × 월 판정 결과 |
-| `hdp11_underperformance` | 미달성만 |
-| `hdp11_site_summary` | 사업장 × 월 달성률 |
+| `convert_value(raw, scale, format)` | 환산배율·시간serial·퍼센트텍스트 변환 (매크로 `modImport`) |
+| `judge(actual, target, direction, tol)` | 달성/미달성/판정불가 (매크로 `modCheck`) |
+| `is_admin()` | RLS 판정용 |
+| `evaluation` | 지표 × 월 판정 결과 |
+| `underperformance` | 미달성만 |
+| `site_summary` | 사업장 × 월 달성률 |
 
 ## 2. 실행 순서
 
@@ -39,7 +39,7 @@
 3. **관리자를 등록합니다.** 쓰기 권한은 여기 등록된 사람만 갖습니다.
 
    ```sql
-   insert into public.hdp11_admin (user_id, email)
+   insert into public.admin (user_id, email)
    select id, email from auth.users where email = 'aebon@kakao.com'
    on conflict (user_id) do nothing;
    ```
@@ -61,7 +61,7 @@
 ## 3. 권한 구조
 
 - **읽기**: 로그인한 사용자 전체
-- **쓰기(INSERT/UPDATE/DELETE)**: `hdp11_admin` 에 등록된 사람만
+- **쓰기(INSERT/UPDATE/DELETE)**: `admin` 에 등록된 사람만
 - **실행로그**: 남기고 읽을 수는 있으나 **고치거나 지울 수 없습니다.**
   UPDATE/DELETE 정책을 아예 만들지 않았습니다 — 사후 조작을 막기 위함입니다.
 - **anon(비로그인)** 은 테이블도 함수도 건드릴 수 없습니다.

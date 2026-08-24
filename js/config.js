@@ -13,11 +13,11 @@
   'use strict';
 
   root.APP_CONFIG = {
-    // 공용 Supabase 프로젝트 (전 사이트 공통 — 테이블은 hdp11_ 접두사로 구분)
+    // 공용 Supabase 프로젝트 (전 사이트 공통 — 테이블은  접두사로 구분)
     SUPABASE_URL: 'https://hcmgdztsgjvzcyxyayaj.supabase.co',
     SUPABASE_ANON_KEY: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhjbWdkenRzZ2p2emN5eHlheWFqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE0MzU4ODcsImV4cCI6MjA4NzAxMTg4N30.gznaPzY1l8qDAPsEyYNR9KS7f7VqS3xaw-_2HTSwSZw',
 
-    TABLE_PREFIX: 'hdp11_',
+    TABLE_PREFIX: '',
 
     /**
      * Supabase 를 실제로 쓸지.
