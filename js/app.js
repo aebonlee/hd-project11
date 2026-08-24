@@ -10,6 +10,11 @@
   };
   var fmt = Logic.formatNumber;
 
+  // 저장 백엔드. Supabase 설정이 켜져 있으면 그쪽, 아니면 localStorage 데모.
+  // 화면 코드는 이 변수 하나만 보고 쓴다.
+  var DB = window.Store;
+  var backend = 'demo';
+
   var state = {
     siteId: null,
     month: null,
@@ -22,9 +27,15 @@
   /* =============== 초기화 =============== */
 
   function init() {
-    var db = Store.load();
-    state.siteId = db.sites[0] ? db.sites[0].id : null;
-    state.month = db.settings.currentMonth;
+    var db = DB.load();
+    if (!db || !db.sites || !db.sites.length) {
+      alert('표시할 사업장이 없습니다. supabase/schema.sql 의 시드가 들어갔는지 확인하세요.');
+      return;
+    }
+    state.siteId = db.sites[0].id;
+    // Supabase 모드에는 저장된 기준월이 없다. 자료가 거의 다 들어온 마지막 달을 고른다.
+    state.month = db.settings.currentMonth || pickMonth(db);
+    db.settings.currentMonth = state.month;
 
     $('siteSelect').innerHTML = db.sites.map(function (s) {
       return '<option value="' + esc(s.id) + '">' + esc(s.name) + ' (' + esc(s.region) + ')</option>';
@@ -51,12 +62,16 @@
     });
     $('monthSelect').addEventListener('change', function () {
       state.month = this.value;
-      Store.settings({ currentMonth: state.month });
+      DB.settings({ currentMonth: state.month });
       renderAll();
     });
     $('btnReset').addEventListener('click', function () {
+      if (backend === 'supabase') {
+        alert('Supabase 모드에서는 초기화를 쓸 수 없습니다. 운영 데이터를 지우지 않기 위함입니다.');
+        return;
+      }
       if (!confirm('데모 데이터를 처음 상태로 되돌립니다. 계속할까요?')) return;
-      Store.reset();
+      DB.reset();
       location.reload();
     });
 
@@ -89,7 +104,7 @@
     $('btnExportCheck').addEventListener('click', exportCheck);
 
     $('senderName').addEventListener('change', function () {
-      Store.settings({ sender: this.value.trim() || 'HDPS 사무국' });
+      DB.settings({ sender: this.value.trim() || 'HDPS 사무국' });
       renderMail();
     });
     $('btnExportMail').addEventListener('click', exportMail);
@@ -97,7 +112,26 @@
     $('mappingSearch').addEventListener('input', renderMapping);
   }
 
-  function site() { return Store.getSite(state.siteId); }
+  /** 채움률 80% 이상인 마지막 달. 첫 화면이 온통 '미입력'으로 보이지 않게. */
+  function pickMonth(db) {
+    var fallback = null;
+    for (var i = Logic.MONTHS.length - 1; i >= 0; i--) {
+      var mo = Logic.MONTHS[i];
+      var total = 0, filled = 0;
+      db.sites.forEach(function (s) {
+        (s.kpis || []).forEach(function (k) {
+          total++;
+          if (k.actuals && k.actuals[mo] !== undefined && k.actuals[mo] !== null) filled++;
+        });
+      });
+      if (!total) continue;
+      if (fallback === null && filled > 0) fallback = mo;
+      if (filled / total >= 0.8) return mo;
+    }
+    return fallback || Logic.MONTHS[0];
+  }
+
+  function site() { return DB.getSite(state.siteId); }
   function evaluation() { return Logic.evaluateMonth(site().kpis, state.month); }
 
   function renderAll() {
@@ -113,7 +147,7 @@
   /* =============== 대시보드 =============== */
 
   function renderDashboard() {
-    var db = Store.load();
+    var db = DB.load();
     $('dashMonth').textContent = state.month + ' 기준';
     $('moduleSite').textContent = site().name;
     $('trendSite').textContent = site().name;
@@ -215,7 +249,7 @@
 
   function onSheetChanged() {
     var grid = currentGrid();
-    var maps = Store.mappingsFor(state.siteId);
+    var maps = DB.mappingsFor(state.siteId);
     var det = Importer.detectNameColumn(grid, maps);
 
     var width = 0;
@@ -255,7 +289,7 @@
     if (valueCol < 0) { alert('값 열을 고를 수 없습니다.'); return; }
 
     var rows = Importer.extractRows(grid, nameCol, valueCol);
-    var maps = Store.mappingsFor(state.siteId);
+    var maps = DB.mappingsFor(state.siteId);
     state.pending = Logic.applyMapping(rows, maps);
     renderImportResult();
   }
@@ -295,8 +329,8 @@
 
   function commitImport() {
     if (!state.pending) return;
-    var n = Store.applyImport(state.siteId, state.month, state.pending.applied);
-    Store.log('데이터 자동입력', state.siteId, state.month, n,
+    var n = DB.applyImport(state.siteId, state.month, state.pending.applied);
+    DB.log('데이터 자동입력', state.siteId, state.month, n,
       state.pending.stats.unmatched, '건너뜀 ' + state.pending.stats.skipped + '건');
     alert(state.month + ' 실적 ' + n + '건을 반영했습니다.');
     state.pending = null;
@@ -306,7 +340,7 @@
   }
 
   function downloadTemplate() {
-    var wb = Importer.buildTemplate(Store.mappingsFor(state.siteId), state.month);
+    var wb = Importer.buildTemplate(DB.mappingsFor(state.siteId), state.month);
     XLSX.writeFile(wb, 'HDPS_원본실적_양식_' + site().name + '_' + state.month + '.xlsx');
   }
 
@@ -385,7 +419,7 @@
     XLSX.utils.book_append_sheet(wb, ws2, '미달성목록');
 
     XLSX.writeFile(wb, 'HDPS_KPI_판정_' + site().name + '_' + state.month + '.xlsx');
-    Store.log('달성 판정', state.siteId, state.month, ev.summary.total, ev.summary.under, '엑셀 내보내기');
+    DB.log('달성 판정', state.siteId, state.month, ev.summary.total, ev.summary.under, '엑셀 내보내기');
     renderLogs();
   }
 
@@ -396,8 +430,8 @@
     return Logic.buildMailDrafts(Logic.collectUnderperformance(ev), {
       site: site().name,
       month: state.month,
-      contacts: Store.contactsFor(state.siteId),
-      sender: Store.settings().sender
+      contacts: DB.contactsFor(state.siteId),
+      sender: DB.settings().sender
     });
   }
 
@@ -440,7 +474,7 @@
           + '?subject=' + encodeURIComponent(d.subject)
           + '&body=' + encodeURIComponent(d.body);
         window.location.href = href;
-        Store.log('미달성 메일', state.siteId, state.month, d.count, 0, d.owner + ' → ' + d.to);
+        DB.log('미달성 메일', state.siteId, state.month, d.count, 0, d.owner + ' → ' + d.to);
       });
     });
   }
@@ -484,7 +518,7 @@
 
   function renderMapping() {
     var q = ($('mappingSearch').value || '').trim().toLowerCase();
-    var maps = Store.mappingsFor(state.siteId).filter(function (m) {
+    var maps = DB.mappingsFor(state.siteId).filter(function (m) {
       if (!q) return true;
       return (m.kpiEn + ' ' + m.kpiKo + ' ' + m.module).toLowerCase().indexOf(q) >= 0;
     });
@@ -505,7 +539,7 @@
   /* =============== 담당자 =============== */
 
   function renderContacts() {
-    var list = Store.contactsFor(state.siteId);
+    var list = DB.contactsFor(state.siteId);
     $('contactTable').innerHTML =
       '<thead><tr><th>담당팀/부서</th><th>담당자명</th><th>이메일</th><th class="num">이번 달 미달성</th></tr></thead><tbody>'
       + list.map(function (c, i) {
@@ -523,7 +557,7 @@
         var c = list[Number(inp.dataset.ci)];
         var name = inp.dataset.f === 'name' ? inp.value.trim() : c.name;
         var email = inp.dataset.f === 'email' ? inp.value.trim() : c.email;
-        Store.setContact(state.siteId, c.owner, name, email);
+        DB.setContact(state.siteId, c.owner, name, email);
         renderContacts();
       });
     });
@@ -532,12 +566,12 @@
   /* =============== 로그 =============== */
 
   function renderLogs() {
-    var logs = Store.load().logs;
+    var logs = DB.load().logs;
     $('logTable').innerHTML =
       '<thead><tr><th>실행일시</th><th>작업</th><th>사업장</th><th>월</th>'
       + '<th class="num">처리</th><th class="num">실패</th><th>비고</th></tr></thead><tbody>'
       + (logs.length ? logs.map(function (l) {
-        var s = Store.getSite(l.siteId);
+        var s = DB.getSite(l.siteId);
         return '<tr><td>' + esc(new Date(l.at).toLocaleString('ko-KR')) + '</td>'
           + '<td>' + esc(l.kind) + '</td><td>' + esc(s ? s.name : l.siteId) + '</td>'
           + '<td>' + esc(l.month) + '</td><td class="num">' + l.processed + '</td>'
@@ -546,6 +580,46 @@
       + '</tbody>';
   }
 
-  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
-  else init();
+  /**
+   * 백엔드를 고른 뒤 화면을 띄운다.
+   *
+   * Supabase 가 켜져 있어도 **연결에 실패하면 데모 모드로 내려간다.**
+   * 스키마를 아직 안 올렸거나 네트워크가 막힌 상황에서 화면이 통째로
+   * 비어 버리는 것보다, 더미로라도 동작을 보여 주는 편이 낫다.
+   * 대신 무슨 일이 있었는지 상단 띠에 그대로 적는다.
+   */
+  function boot() {
+    var banner = document.querySelector('.demo-banner .inner');
+
+    if (window.SupabaseStore && window.SupabaseStore.available()) {
+      if (banner) banner.innerHTML = 'Supabase 에 연결하는 중…';
+      window.SupabaseStore.init(function (err) {
+        if (err) {
+          DB = window.Store;
+          backend = 'demo';
+          if (banner) {
+            banner.innerHTML = '<strong>Supabase 연결 실패 — 데모 데이터로 표시합니다.</strong> '
+              + esc(err.message || String(err))
+              + ' · <code>supabase/schema.sql</code> 을 SQL Editor 에서 실행했는지 확인하세요.';
+          }
+        } else {
+          DB = window.SupabaseStore;
+          backend = 'supabase';
+          if (banner) {
+            banner.innerHTML = '<strong>Supabase 연결됨.</strong> '
+              + '화면의 값은 공용 프로젝트의 <code>hdp11_</code> 테이블에서 옵니다.';
+          }
+        }
+        init();
+      });
+      return;
+    }
+
+    DB = window.Store;
+    backend = 'demo';
+    init();
+  }
+
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
+  else boot();
 })();

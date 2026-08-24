@@ -202,10 +202,15 @@
   </div>
 </footer>
 
+<script src="js/config.js"></script>
+<!-- Supabase 클라이언트. 데모 모드에서는 쓰이지 않으므로 못 받아도 화면은 그대로 돕니다.
+     (엑셀 라이브러리는 사내망을 고려해 로컬 동봉본을 씁니다) -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="lib/xlsx.full.min.js"></script>
 <script src="js/seed-data.js"></script>
 <script src="js/logic.js"></script>
 <script src="js/store.js"></script>
+<script src="js/supabase-store.js"></script>
 <script src="js/importer.js"></script>
 <script src="js/app.js"></script>
 </body>

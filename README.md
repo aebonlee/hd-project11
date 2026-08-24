@@ -12,7 +12,8 @@
 웹으로 옮긴 것입니다. 매크로가 실제로 걸려 넘어졌던 자리를 전부 테스트로 고정했습니다.
 
 - 빌드 없이 동작하는 순수 HTML/CSS/JS — GitHub Pages에 그대로 올라갑니다
-- 데모 DB: 브라우저 `localStorage` (최초 실행 시 샘플 자동 생성)
+- 저장소는 두 가지 모드: **데모 모드**(브라우저 `localStorage`) / **Supabase 모드**(공용 Postgres).
+  화면과 계산은 같고 저장 위치만 다릅니다 → [`supabase/README.md`](supabase/README.md)
 - 엑셀 읽기/쓰기: [SheetJS](https://sheetjs.com/) 로컬 동봉 (CDN 미사용 — 사내망에서도 열립니다)
 - 메일 발송: `mailto:` 로 메일 클라이언트를 열어 **사람이 확인 후 발송**
   (매크로의 기본값 `SEND_DIRECTLY = False`와 같은 취지)
@@ -152,11 +153,19 @@
 
 - 사업장 목록·팀 이름은 `scripts/gen-seed.py` 상단의 `SITES` / `OWNERS` 만 바꾸면 됩니다.
 
-**3) 여러 사람이 같이 쓰려면 (Supabase 전환)**
+**3) 여러 사람이 같이 쓰려면 (Supabase 모드)**
 
-`js/store.js` 가 데이터 접근의 단일 창구입니다. 이 파일의 `load` / `save` / `log` 를
-`@supabase/supabase-js` 호출로 바꾸면 나머지 화면·계산은 그대로 돕니다.
-`js/logic.js` 는 DOM·저장소에 의존하지 않으므로 손댈 필요가 없습니다.
+이미 만들어 두었습니다. 절차는 [`supabase/README.md`](supabase/README.md) 를 보세요. 요약하면:
+
+1. `supabase/schema.sql` 을 Supabase SQL Editor 에서 실행 (테이블 7종 + 함수 3종 + 뷰 3종 + RLS)
+2. `hdp11_admin` 에 관리자 계정 등록
+3. `js/config.js` 의 `USE_SUPABASE` 를 `true` 로 — 또는 주소에 `?supabase=1` 을 붙여 미리 확인
+
+읽기는 로그인 사용자 전체, 쓰기는 관리자만, 실행로그는 **고치거나 지울 수 없습니다.**
+연결에 실패하면 화면이 비지 않고 **데모 데이터로 내려가며 상단 띠에 이유를 적습니다.**
+
+`js/store.js`(데모)와 `js/supabase-store.js`(운영)가 **같은 모양의 API** 를 내놓고,
+`js/app.js` 는 `DB` 변수 하나만 보고 씁니다. `js/logic.js` 는 저장소를 아예 모릅니다.
 
 ## 개발 / 테스트
 
@@ -168,8 +177,13 @@ js/store.js           # localStorage 데모 DB
 js/importer.js        # 엑셀 읽기·열 자동 탐지·표준 양식
 js/app.js             # 화면 컨트롤러
 js/seed-data.js       # 자동 생성된 더미 (직접 고치지 말 것)
-scripts/gen-seed.py   # ↑ 를 굽는 생성기
+js/config.js          # Supabase 접속 설정 / 모드 전환
+js/supabase-store.js  # Supabase 어댑터 (store.js 와 같은 API)
+supabase/schema.sql   # 운영 스키마 + RLS  ← SQL Editor 에서 실행
+supabase/README.md    # 설정 절차
+scripts/gen-seed.py   # seed-data.js 를 굽는 생성기
 scripts/kpi-catalog.json  # 모듈·지표명·판정방향·환산배율·값형식
+scripts/sqltest/      # SQL 로컬 검증 하네스 (운영 실행 금지 가드 내장)
 lib/xlsx.full.min.js  # SheetJS 로컬 동봉본
 test/logic.test.js    # 단위 테스트
 ```
@@ -177,7 +191,8 @@ test/logic.test.js    # 단위 테스트
 Node.js만 있으면 됩니다.
 
 ```bash
-node test/logic.test.js
+node test/logic.test.js      # 로직 86개
+./scripts/sqltest/run.sh     # SQL 40여 개 (임시 PostgreSQL 을 띄워 실제 적용)
 ```
 
 값 변환 6종(환산배율·시간·퍼센트텍스트·텍스트 거르기), 매핑 적용, 판정 4방향,
