@@ -15,7 +15,8 @@
 })(typeof self !== 'undefined' ? self : this, function (root) {
   'use strict';
 
-  var P = (root.APP_CONFIG && root.APP_CONFIG.TABLE_PREFIX) || '';
+  // 각자 자기 Supabase 프로젝트에 올리므로 테이블 접두사를 쓰지 않는다.
+  var P = '';
   var client = null;
   var db = null;          // 메모리에 올린 전체 데이터 (Store 와 같은 모양)
   var lastError = null;

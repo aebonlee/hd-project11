@@ -5,11 +5,16 @@
 
 ---
 
-## 1. 왜 접두사가 붙어 있나
+## 1. 어디에 올리나
 
-전 사이트가 **Supabase 프로젝트 하나**(`hcmgdztsgjvzcyxyayaj`)를 함께 씁니다.
-테이블이 이미 수백 개라, 접두사 없이 `site`·`kpi`·`contact` 같은 이름을 쓰면 다른 사이트와 충돌합니다.
-그래서 이 프로젝트의 테이블·함수·정책은 **전부 `` 로 시작**합니다.
+**본인 Supabase 프로젝트**에 올립니다. 회사 프로젝트가 아닙니다.
+
+1. [supabase.com](https://supabase.com) 에서 무료 프로젝트를 하나 만듭니다.
+2. Settings → API 에서 **Project URL** 과 **anon / public 키**를 복사합니다.
+3. `js/config.js` 의 `SUPABASE_URL` · `SUPABASE_ANON_KEY` 에 붙여 넣습니다.
+
+프로젝트가 본인 것이라 테이블 이름에 접두사를 붙이지 않았습니다.
+(여러 앱을 한 프로젝트에 몰아 쓸 계획이라면 이름 충돌을 먼저 확인하세요.)
 
 | 테이블 | 담는 것 |
 |---|---|
@@ -32,7 +37,7 @@
 
 ## 2. 실행 순서
 
-1. **[SQL Editor](https://supabase.com/dashboard/project/hcmgdztsgjvzcyxyayaj/sql) 를 엽니다.**
+1. **본인 프로젝트의 **SQL Editor** 를 엽니다.**
 2. `supabase/schema.sql` **전체를 복사해 붙여 넣고 실행**합니다.
    재실행해도 안전합니다(`IF NOT EXISTS` / `DROP ... IF EXISTS` 를 앞에 두었습니다).
    실행이 끝나면 사업장 6곳과 팀별 담당자 60행이 들어가 있습니다.
@@ -40,7 +45,7 @@
 
    ```sql
    insert into public.admin (user_id, email)
-   select id, email from auth.users where email = 'aebon@kakao.com'
+   select id, email from auth.users where email = '<본인 로그인 이메일>'
    on conflict (user_id) do nothing;
    ```
 
@@ -77,7 +82,7 @@
 ```sql
 select proname, array_to_string(proacl, E'\n')
   from pg_proc p join pg_namespace n on n.oid = p.pronamespace
- where n.nspname = 'public' and proname like 'hdp11\_%';
+ where n.nspname = 'public';
 ```
 
 `anon=X/postgres` 가 보이면 안 됩니다.
