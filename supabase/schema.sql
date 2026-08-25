@@ -210,7 +210,14 @@ $fn$;
 -- 3. 뷰 — 판정 결과 / 미달성 목록 / 사업장 요약
 -- ----------------------------------------------------------------------------
 
-create or replace view public.evaluation as
+
+-- ⚠ 뷰에는 `with (security_invoker = true)` 를 붙인다.
+--   붙이지 않으면 뷰는 **만든 사람(postgres)의 권한**으로 돌아, 뷰를 읽을 수 있는
+--   사람이 밑에 깔린 표의 RLS 를 통째로 지나친다. 표만 잠그고 뷰를 안 잠그면 헛일이다.
+--   (hd-project03 에서 실제로 남의 업체 실사 결과가 뷰로 그대로 보였다.
+--    tests/server.test.js 의 "업체는 보고서 뷰로도 남의 자료를 볼 수 없다" 가 잡는다)
+--   security_invoker 는 PostgreSQL 15 부터. Supabase 는 15 이상이다.
+create or replace view public.evaluation with (security_invoker = true) as
 select
   k.id            as kpi_id,
   k.site_id,
@@ -235,10 +242,10 @@ from public.kpi k
 join public.site s on s.id = k.site_id
 left join public.actual a on a.kpi_id = k.id;
 
-create or replace view public.underperformance as
+create or replace view public.underperformance with (security_invoker = true) as
 select * from public.evaluation where status = '미달성';
 
-create or replace view public.site_summary as
+create or replace view public.site_summary with (security_invoker = true) as
 select
   site_id,
   site_name,
