@@ -41,10 +41,82 @@
    * 전체를 읽어 Store 와 같은 모양으로 조립한다.
    * @param {function} done  (err, db)
    */
+  /**
+   * 지표 정의를 서버에 심는다 — **처음 한 번만.**
+   *
+   * 왜 필요한가
+   *   스키마는 사업장(site)과 팀(contact)까지만 심는다. 지표(kpi)는 비어 있다.
+   *   그런데 엑셀 임포트는 `kpi.id` 로 행을 맞춰 실적(actual)만 넣는 구조라,
+   *   정의가 없으면 **맞출 대상이 없어 매번 "0건 반영"** 이 되고
+   *   화면에도 지표가 하나도 안 뜬다. 서버 모드가 통째로 죽는다.
+   *
+   *   그래서 서버에 지표가 하나도 없을 때만, 지금 이 브라우저가 들고 있는
+   *   정의(js/seed-data.js)를 씨앗으로 올린다. 이미 있으면 건드리지 않는다 —
+   *   남이 올린 진짜 정의를 더미로 덮으면 안 된다.
+   *
+   *   서지철 수강생의 실제 지표 파일이 오면 scripts/gen-seed.py 로 seed-data.js 를
+   *   다시 굽고, 빈 프로젝트에 한 번 올리면 그대로 정본이 된다.
+   */
+  function seedDefinitions(sb, done) {
+    var SD = root.SeedData;
+    if (!SD || !SD.sites) { done(null, 0); return; }
+
+    var rows = [];
+    SD.sites.forEach(function (site) {
+      (site.kpis || []).forEach(function (k, i) {
+        rows.push({
+          id: k.id, site_id: site.id,
+          module: k.module || '미분류', module_code: k.moduleCode || null,
+          name_ko: k.nameKo, name_en: k.nameEn || null,
+          unit: k.unit || null,
+          direction: k.direction || '상향(높을수록 좋음)',
+          target: k.target === undefined ? null : k.target,
+          tolerance: k.tolerance === undefined ? null : k.tolerance,
+          owner: k.owner || null,
+          scale: k.scale === undefined ? 1 : k.scale,
+          format: k.format || '숫자',
+          sort_order: i
+        });
+      });
+    });
+    if (!rows.length) { done(null, 0); return; }
+
+    // 한 번에 720행을 보내면 요청이 커진다. 200개씩 끊어 보낸다.
+    var CHUNK = 200, i = 0;
+    function next() {
+      if (i >= rows.length) { done(null, rows.length); return; }
+      var part = rows.slice(i, i + CHUNK);
+      i += CHUNK;
+      sb.from(t('kpi')).upsert(part, { onConflict: 'id' }).then(function (r) {
+        if (r.error) { done(r.error, 0); return; }
+        next();
+      });
+    }
+    next();
+  }
+
+  var seededNow = 0;
+  function seededCount() { return seededNow; }
+
   function init(done) {
     if (!available()) { done(new Error('Supabase 설정이 꺼져 있습니다.')); return; }
     var sb = getClient();
+    seededNow = 0;   // 이번 연결에서 심은 건수. 안 지우면 두 번째 연결에서도 배너가 뜬다.
 
+    // 지표가 하나도 없으면 먼저 심는다. 심지 않으면 아래에서 빈 화면을 만들고,
+    // 엑셀을 올려도 맞출 대상이 없어 "0건 반영"만 반복된다.
+    sb.from(t('kpi')).select('id').limit(1).then(function (probe) {
+      if (probe.error) { done(probe.error); return; }
+      if ((probe.data || []).length) { fetchAll(sb, done); return; }
+      seedDefinitions(sb, function (err, n) {
+        if (err) { done(err); return; }
+        seededNow = n;
+        fetchAll(sb, done);
+      });
+    });
+  }
+
+  function fetchAll(sb, done) {
     Promise.all([
       sb.from(t('site')).select('*').order('id'),
       sb.from(t('kpi')).select('*').order('sort_order', { ascending: true, nullsFirst: false }),
@@ -235,6 +307,7 @@
     load: load,
     save: function () { /* 쓰기는 각 함수가 즉시 보낸다 */ },
     reset: reset,
+    seededCount: seededCount,
     getSite: getSite,
     mappingsFor: mappingsFor,
     contactsFor: contactsFor,

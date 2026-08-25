@@ -606,8 +606,14 @@
           DB = window.SupabaseStore;
           backend = 'supabase';
           if (banner) {
+            // 접두사는 쓰지 않는다 — 각자 자기 Supabase 프로젝트에 올리기 때문이다.
+            var seeded = window.SupabaseStore.seededCount && window.SupabaseStore.seededCount();
             banner.innerHTML = '<strong>Supabase 연결됨.</strong> '
-              + '화면의 값은 공용 프로젝트의 <code>hdp11_</code> 테이블에서 옵니다.';
+              + '화면의 값은 본인 Supabase 프로젝트의 테이블에서 옵니다.'
+              + (seeded
+                  ? ' · 지표가 비어 있어 <strong>정의 ' + seeded + '건을 처음 올렸습니다.</strong>'
+                    + ' 실제 지표 파일이 오면 <code>scripts/gen-seed.py</code> 로 다시 구워 올리세요.'
+                  : '');
           }
         }
         init();
