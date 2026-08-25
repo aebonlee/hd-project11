@@ -2,6 +2,10 @@
 
 > 🌐 **배포 페이지: [https://aebonlee.github.io/hd-project11/](https://aebonlee.github.io/hd-project11/)** · 저장소: https://github.com/aebonlee/hd-project11
 
+> 🗄️ **Supabase 를 붙이려면 → [`SUPABASE-설정.md`](SUPABASE-설정.md)**
+> 데이터베이스는 **수강생 본인 계정**에 만듭니다. 계정 만들기부터 확인까지 단계별로 적어 두었습니다.
+
+
 > 기획: 서지철 (HD건설기계) · 생성형 AI 업무자동화 전문가과정 [1차수] 프로젝트
 
 글로벌 6개 사업장이 매달 보내오는 **KPI 원본 엑셀을 올리면 자동으로 전사**되고,
